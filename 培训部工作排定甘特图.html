@@ -1595,31 +1595,31 @@ body {
           <div class="ability-input-row">
             <span class="ability-label">理论培训</span>
             <div class="star-selector" data-type="theory" id="newTheoryStars">
-              <button class="star-btn" data-val="1">★</button>
-              <button class="star-btn" data-val="2">★</button>
-              <button class="star-btn" data-val="3">★</button>
-              <button class="star-btn" data-val="4">★</button>
-              <button class="star-btn" data-val="5">★</button>
+              <button class="star-btn" data-val="1" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="2" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="3" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="4" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="5" onclick="selectStar(this)">★</button>
             </div>
           </div>
           <div class="ability-input-row">
             <span class="ability-label">技术培训</span>
             <div class="star-selector" data-type="tech" id="newTechStars">
-              <button class="star-btn" data-val="1">★</button>
-              <button class="star-btn" data-val="2">★</button>
-              <button class="star-btn" data-val="3">★</button>
-              <button class="star-btn" data-val="4">★</button>
-              <button class="star-btn" data-val="5">★</button>
+              <button class="star-btn" data-val="1" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="2" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="3" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="4" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="5" onclick="selectStar(this)">★</button>
             </div>
           </div>
           <div class="ability-input-row">
             <span class="ability-label">扶持经验</span>
             <div class="star-selector" data-type="support" id="newSupportStars">
-              <button class="star-btn" data-val="1">★</button>
-              <button class="star-btn" data-val="2">★</button>
-              <button class="star-btn" data-val="3">★</button>
-              <button class="star-btn" data-val="4">★</button>
-              <button class="star-btn" data-val="5">★</button>
+              <button class="star-btn" data-val="1" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="2" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="3" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="4" onclick="selectStar(this)">★</button>
+              <button class="star-btn" data-val="5" onclick="selectStar(this)">★</button>
             </div>
           </div>
         </div>
@@ -1727,31 +1727,31 @@ body {
       <div class="ability-input-row">
         <span class="ability-label">理论培训</span>
         <div class="star-selector" data-type="theory" id="editTheoryStars">
-          <button class="star-btn" data-val="1">★</button>
-          <button class="star-btn" data-val="2">★</button>
-          <button class="star-btn" data-val="3">★</button>
-          <button class="star-btn" data-val="4">★</button>
-          <button class="star-btn" data-val="5">★</button>
+          <button class="star-btn" data-val="1" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="2" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="3" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="4" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="5" onclick="selectStar(this)">★</button>
         </div>
       </div>
       <div class="ability-input-row">
         <span class="ability-label">技术培训</span>
         <div class="star-selector" data-type="tech" id="editTechStars">
-          <button class="star-btn" data-val="1">★</button>
-          <button class="star-btn" data-val="2">★</button>
-          <button class="star-btn" data-val="3">★</button>
-          <button class="star-btn" data-val="4">★</button>
-          <button class="star-btn" data-val="5">★</button>
+          <button class="star-btn" data-val="1" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="2" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="3" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="4" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="5" onclick="selectStar(this)">★</button>
         </div>
       </div>
       <div class="ability-input-row">
         <span class="ability-label">扶持经验</span>
         <div class="star-selector" data-type="support" id="editSupportStars">
-          <button class="star-btn" data-val="1">★</button>
-          <button class="star-btn" data-val="2">★</button>
-          <button class="star-btn" data-val="3">★</button>
-          <button class="star-btn" data-val="4">★</button>
-          <button class="star-btn" data-val="5">★</button>
+          <button class="star-btn" data-val="1" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="2" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="3" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="4" onclick="selectStar(this)">★</button>
+          <button class="star-btn" data-val="5" onclick="selectStar(this)">★</button>
         </div>
       </div>
     </div>
@@ -1834,19 +1834,54 @@ body {
 const SUSHI_CAT_AVATAR = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAADdcAAA3XCAYAAAAjPuhyAAAACXBIWXMAAC4jAAAuIwF4pT92ABAAAElEQVR4nOz9ebxtWV3fe39/Y66192mqpaAAkb5VFA2oKMYo9kLsniiKiIAodmhE0mBzH8lNTHg98V4FEWKbq9do4vPoK/fGaGyiN1ERO1B6KRBBQKCqqPbUOXutOcfv+WOOMeeYY8219j6nTlWdqv15k1lzrjlHN8damz9SfP2ZuwsAAAAAAAAAAAAAAAAAAAAAAAAAgOMk3NMLAAAAAAAAAAAAAAAAAAAAAAAAAADg7ka4DgAAAAAAAAAAAAAAAAAAAAAAAABw7BCuAwAAAAAAAAAAAAAAAAAAAAAAAAAcO4TrAAAAAAAAAAAAAAAAAAAAAAAAAADHDuE6AAAAAAAAAAAAAAAAAAAAAAAAAMCxQ7gOAAAAAAAAAAAAAAAAAAAAAAAAAHDsEK4DAAAAAAAAAAAAAAAAAAAAAAAAABw7hOsAAAAAAAAAAAAAAAAAAAAAAAAAAMcO4ToAAAAAAAAAAAAAAAAAAAAAAAAAwLFDuA4AAAAAAAAAAAAAAAAAAAAAAAAAcOwQrgMAAAAAAAAAAAAAAAAAAAAAAAAAHDuE6wAAAAAAAAAAAAAAAAAAAAAAAAAAxw7hOgAAAAAAAAAAAAAAAAAAAAAAAADAsUO4DgAAAAAAAAAAAAAAAAAAAAAAAABw7BCuAwAAAAAAAAAAAAAAAAAAAAAAAAAcO4TrAAAAAAAAAAAAAAAAAAAAAAAAAADHDuE6AAAAAAAAAAAAAAAAAAAAAAAAAMCxQ7gOAAAAAAAAAAAAAAAAAAAAAAAAAHDsEK4DAAAAAAAAAAAAAAAAAAAAAAAAABw7hOsAAAAAAAAAAAAAAAAAAAAAAAAAAMcO4ToAAAAAAAAAAAAAAAAAAAAAAAAAwLFDuA4AAAAAAAAAAAAAAAAAAAAAAAAAcOwQrgMAAAAAAAAAAAAAAAAAAAAAAAAAHDuE6wAAAAAAAAAAAAAAAAAAAAAAAAAAxw7hOgAAAAAAAAAAAAAAAAAAAAAAAADAsUO4DgAAAAAAAAAAAAAAAAAAAAAAAABw7BCuAwAAAAAAAAAAAAAAAAAAAAAAAAAcO4TrAAAAAAAAAAAAAAAAAAAAAAAAAADHDuE6AAAAAAAAAAAAAAAAAAAAAAAAAMCxQ7gOAAAAAAAAAAAAAAAAAAAAAAAAAHDsEK4DAAAAAAAAAAAAAAAAAAAAAAAAABw7hOsAAAAAAAAAAAAAAAAAAAAAAAAAAMcO4ToAAAAAAAAAAAAAAAAAAAAAAAAAwLFDuA4AAAAAAAAAAAAAAAAAAAAAAAAAcOwQrgMAAAAAAAAAAAAAAAAAAAAAAAAAHDuE6wAAAAAAAAAAAAAAAAAAAAAAAAAAxw7hOgAAAAAAAAAAAAAAAAAAAAAAAADAsUO4DgAAAAAAAAAAAAAAAAAAAAAAAABw7BCuAwAAAAAAAAAAAAAAAAAAAAAAAAAcO4TrAAAAAAAAAAAAAAAAAAAAAAAAAADHDuE6AAAAAAAAAAAAAAAAAAAAAAAAAMCxQ7gOAAAAAAAAAAAAAAAAAAAAAAAAAHDsEK4DAAAAAAAAAAAAAAAAAAAAAAAAABw7hOsAAAAAAAAAAAAAAAAAAAAAAAAAAMcO4ToAAAAAAAAAAAAAAAAAAAAAAAAAwLFDuA4AAAAAAAAAAAAAAAAAAAAAAAAAcOwQrgMAAAAAAAAAAAAAAAAAAAAAAAAAHDuE6wAAAAAAAAAAAAAAAAAAAAAAAAAAxw7hOgAAAAAAAAAAAAAAAAAAAAAAAADAsUO4DgAAAAAAAAAAAAAAAAAAAAAAAABw7BCuAwAAAAAAAAAAAAAAAAAAAAAAAAAcO4TrAAAAAAAAAAAAAAAAAAAAAAAAAADHDuE6AAAAAAAAAAAAAAAAAAAAAAAAAMCxQ7gOAAAAAAAAAAAAAAAAAAAAAAAAAHDsEK4DAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 
 // 任务类型模板（从 localStorage 加载，可动态添加/删除）
+// 【重要】每个任务类型必须有独特、好看、易区分的实色，不使用白色、透明或黑色系
+// 颜色分配：技术=浅绿、理论=橙色、门店扶持=浅黄、开业扶持=深黄、实操=薰衣草、自定义=随机
 function getTaskTemplates() {
+  const COLORS = {
+    theory:   '#e8a87c',  // 橙色 - 理论培训
+    tech:     '#95c77d',  // 浅绿 - 技术培训
+    support:  '#5c9ead',  // 蓝色 - 开业扶持
+    store:    '#c38d9e',  // 薰衣草 - 门店扶持
+    practice: '#f4a261',  // 深黄 - 门店实操（备用）
+  };
+  
+  // 默认类型（使用独特好看的实色）
+  const defaultTemplates = {
+    theory:   { name:'理论培训', days:3, type:'theory', icon:'理论', color:'#e8a87c' },   // 橙色
+    tech:     { name:'技术培训', days:5, type:'tech',   icon:'技术', color:'#95c77d' },   // 浅绿
+    support:  { name:'开业扶持', days:5, type:'support',icon:'扶持', color:'#5c9ead' },   // 蓝色
+    store:    { name:'门店扶持', days:5, type:'store',  icon:'扶持', color:'#c38d9e' },   // 薰衣草
+    practice: { name:'门店实操', days:7, type:'practice',icon:'实操', color:'#f4a261' },   // 深黄
+    meeting:  { name:'会议',     days:1, type:'meeting',icon:'会议', color:'#ff6b6b' },   // 粉红
+  };
+  
+  // 随机颜色池：黄色系为主（新建任务的默认色）
+  const RANDOM_COLORS = ['f7dc6f','ffd700','ffeb3b','fff176','fff59d'];
+  
   try {
     const saved = localStorage.getItem('aoi_gantt_task_types');
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // 【强制修复】每次都强制使用正确的颜色，不依赖检测逻辑
+      let fixed = false;
+      Object.keys(parsed).forEach((k, i) => {
+        const expectedColor = COLORS[k];
+        if (expectedColor && parsed[k].color !== expectedColor) {
+          parsed[k].color = expectedColor;
+          fixed = true;
+        }
+      });
+      if (fixed) {
+        localStorage.setItem('aoi_gantt_task_types', JSON.stringify(parsed));
+        console.log('[getTaskTemplates] 已强制修复任务类型颜色');
+      }
+      return parsed;
+    }
   } catch(e) {}
-  // 默认类型
-  return {
-    theory:   { name:'理论培训',   days:3, type:'theory',   icon:'理论', color:'var(--theory)' },
-    tech:     { name:'技术培训',   days:5, type:'tech',     icon:'技术', color:'var(--tech)' },
-    practice: { name:'门店实操',   days:7, type:'practice', icon:'实操', color:'var(--practice)' },
-    store:    { name:'门店扶持',   days:5, type:'store',    icon:'扶持', color:'#f5c107' },
-    support:  { name:'开业扶持',   days:5, type:'support',  icon:'扶持', color:'var(--support)' },
-  };
+  
+  // 无旧数据，使用默认模板
+  localStorage.setItem('aoi_gantt_task_types', JSON.stringify(defaultTemplates));
+  return defaultTemplates;
 }
 function saveTaskTemplates(data) {
   localStorage.setItem('aoi_gantt_task_types', JSON.stringify(data));
@@ -1893,11 +1928,35 @@ let editAvatarBase64 = '';
 // ═══════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════
+
+// AUTO FIX TASK TYPE COLORS (auto-run on load)
+function fixTaskTypeColors() {
+  const saved = localStorage.getItem('aoi_gantt_task_types');
+  if (!saved) return;
+  try {
+    const types = JSON.parse(saved);
+    const NICE = ['5c9ead','e8a87c','95c77d','c38d9e','f4a261','e76f51','8b6fc6','4ecdc4','ff6b6b','45b7d1','96ceb4','f7dc6f','bb8fce','85c1e2'];
+    let changed = false;
+    Object.keys(types).forEach((k, i) => {
+      const c = types[k].color || '';
+      if (!c || c.length < 7 || parseInt(c.replace('#',''), 16) > 0xcccccc) {
+        types[k].color = '#' + NICE[i % NICE.length];
+        changed = true;
+        console.log('[fixColor] 修复任务类型:', k, '->', types[k].color);
+      }
+    });
+    if (changed) {
+      localStorage.setItem('aoi_gantt_task_types', JSON.stringify(types));
+      console.log('[fixColor] 任务类型颜色已自动修复');
+    }
+  } catch(e) { console.error('[fixColor] 错误:', e); }
+}
+
 function init() {
   try {
-    loadState();
+        fixTaskTypeColors();
+loadState();
     initSidebar(); // 确保侧边栏默认展开
-    setupStarSelectors();
     setupDragAndDrop();
     // 初始化头像预览（默认使用寿司喵）
     updateAvatarPreview('newAvatarPreview', SUSHI_CAT_AVATAR, '🐱');
@@ -1958,20 +2017,16 @@ function saveState() {
 // EMOJI PICKERS
 // ══+
 // ═══════════════════════════════════════════════════════
-// STAR SELECTORS
+// STAR SELECT (inline onclick handler)
 // ═══════════════════════════════════════════════════════
-function setupStarSelectors() {
-  document.querySelectorAll('.star-selector').forEach(selector => {
-    selector.querySelectorAll('.star-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const val = parseInt(btn.dataset.val);
-        const type = selector.dataset.type;
-        selector.querySelectorAll('.star-btn').forEach((b, i) => {
-          b.classList.toggle('on', i < val);
-          b.classList.toggle(type, ['theory','tech','support'].includes(type));
-        });
-      });
-    });
+function selectStar(btn) {
+  const selector = btn.closest('.star-selector');
+  if (!selector) return;
+  const val = parseInt(btn.dataset.val);
+  const type = selector.dataset.type;
+  selector.querySelectorAll('.star-btn').forEach((b, i) => {
+    b.classList.toggle('on', i < val);
+    b.classList.toggle(type, ['theory','tech','support'].includes(type));
   });
 }
 
@@ -2302,12 +2357,13 @@ function addTaskType() {
   if (!name || !name.trim()) return;
   const days = parseInt(prompt('默认持续天数（如：3）：', '3')) || 3;
   const key = 'custom_' + Date.now();
+  const NICE_COLORS = ['5c9ead','e8a87c','95c77d','c38d9e','f4a261','e76f51','8b6fc6','4ecdc4','ff6b6b','45b7d1','96ceb4','f7dc6f','bb8fce','85c1e2'];
   TASK_TEMPLATES[key] = {
     name: name.trim(),
     days: days,
     type: key,
     icon: name.trim().slice(0, 2),
-    color: '#' + Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0')
+    color: '#' + NICE_COLORS[Math.floor(Math.random() * NICE_COLORS.length)]
   };
   saveTaskTemplates(TASK_TEMPLATES);
   renderTaskTypeSelect();
@@ -2758,10 +2814,25 @@ function renderGantt() {
   const dayW = Math.max(30, Math.floor(availW / dayCount));
   const actualW = labelW + dayW * dayCount;
 
-  // 单一 CSS Grid 表：列 = 标签列120px + N个日期列，行 = 1个表头行 + N个人员行
+  // 【新逻辑】按日期分行：每行 = 一个日期的所有人员任务
+  // 先计算每行需要几个子行（用于重叠的人员标签）
+  // 每个日期可能有多个任务行（按开始日期分组）
+  const personRowCount = {}; // personId -> 需要几行
+  state.persons.forEach(p => {
+    const tasks = state.tasks.filter(t => t.personId === p.id);
+    // 按开始日期分组，每组一行
+    const startDates = [...new Set(tasks.map(t => t.startDate))];
+    personRowCount[p.id] = Math.max(1, startDates.length);
+  });
+  const maxPersonRows = Math.max(...Object.values(personRowCount), 1);
+  
+  // 总行数 = 1表头 + N个日期 * maxPersonRows
+  const totalRows = 1 + dayCount * maxPersonRows;
+  
+  // 单一 CSS Grid 表：列 = 标签列120px + N个日期列，行 = 1个表头行 + N个日期行
   table.style.display = 'grid';
   table.style.gridTemplateColumns = `${labelW}px repeat(${dayCount}, ${dayW}px)`;
-  table.style.gridTemplateRows = `50px repeat(${Math.max(state.persons.length, 1)}, 60px)`;
+  table.style.gridTemplateRows = `50px repeat(${totalRows}, 60px)`;
   table.style.width = actualW + 'px';
   table.style.minWidth = actualW + 'px';
   table.style.overflow = 'hidden';
@@ -2844,6 +2915,8 @@ function renderGantt() {
     });
 
     // 任务条：grid-column 精确定位，覆盖日期格子
+    // 按开始日期排序：离今天越近的排在前面
+    const todayTime = new Date().setHours(0,0,0,0);
     const personTasks = state.tasks
       .filter(t => t.personId === p.id)
       .sort((a,b) => parseDate(a.startDate) - parseDate(b.startDate));
@@ -2854,14 +2927,16 @@ function renderGantt() {
       const startCol = (sIdx >= 0 ? sIdx : 0) + 2;
       const endCol   = (eIdx >= 0 ? eIdx : dayCount - 1) + 2; // 包含结束日
       const conflict = checkConflict(task, p.id);
+      const taskColor = TASK_TEMPLATES[task.type]?.color || '#5c9ead';
       const bar = document.createElement('div');
       bar.className = `gantt-bar ${task.type || 'custom'}${conflict?' has-conflict':''}`;
       bar.style.gridColumn = `${startCol} / ${endCol + 1}`;
       bar.style.gridRow = rowNum;
       bar.style.zIndex = 3;
+      bar.style.setProperty('background', taskColor, 'important');
       bar.dataset.taskId = task.id;
       bar.title = task.name;
-      bar.innerHTML = `<span class="gantt-bar-icon" style="background:${task.color||'var(--primary)'}">${task.icon || '✨'}</span><span class="gantt-bar-text">${task.name}</span><span class="gantt-bar-resize-handle"></span><button class="gantt-bar-delete" onclick="event.stopPropagation();deleteTask('${task.id}')">✕</button>${conflict?'<div class="conflict-badge">!</div>':''}`;
+      bar.innerHTML = `<span class="gantt-bar-icon" style="background:rgba(0,0,0,0.1)">${task.icon || '✨'}</span><span class="gantt-bar-text" style="color:inherit;font-weight:600">${task.name}</span><span class="gantt-bar-resize-handle"></span><button class="gantt-bar-delete" onclick="event.stopPropagation();deleteTask('${task.id}')">✕</button>${conflict?'<div class="conflict-badge">!</div>':''}`;
       if(!window.IS_READONLY){
         bar.onmousedown = e => { e.stopPropagation(); startDrag(e, task.id); };
         bar.onmouseenter = e => showTooltip(e, task.id);
@@ -3634,20 +3709,21 @@ async function loadGistSettings() {
 /* ---------- GitHub Gist：保存（公开，用于分享） ---------- */
 async function saveToGist() {
   if (!githubToken) return;
-  // 不存头像到 Gist（base64 太大，Gist 单文件限制 1MB）
-  const personsClean = state.persons.map(p => {
-    const { avatar, ...rest } = p;
-    return rest;
-  });
-  const payload = {
-    public: true,
-    files: {
-      'gantt-data.json': {
-        content: JSON.stringify({ persons: personsClean, tasks: state.tasks }, null, 2)
-      }
-    }
-  };
   try {
+    // 保存前从 IndexedDB 把头像捞回来，合并进数据一起存
+    const avatarMap = await getAllAvatarsFromDB();
+    const personsWithAvatar = state.persons.map(p => ({
+      ...p,
+      avatar: avatarMap[p.id] || p.avatar || ''
+    }));
+    const payload = {
+      public: true,
+      files: {
+        'gantt-data.json': {
+          content: JSON.stringify({ persons: personsWithAvatar, tasks: state.tasks }, null, 2)
+        }
+      }
+    };
     let url = 'https://api.github.com/gists';
     let method = 'POST';
     if (gistId) { url = `https://api.github.com/gists/${gistId}`; method = 'PATCH'; }
@@ -3700,14 +3776,12 @@ async function loadFromGist() {
     const data = JSON.parse(content);
     console.log('[Gist] 加载成功，persons=', data.persons?.length, 'tasks=', data.tasks?.length);
     if (data.persons && data.tasks !== undefined) {
-      state.persons = data.persons.map(p => ({
-        ...p,
-        avatar: SUSHI_CAT_AVATAR
-      }));
+      state.persons = data.persons;
       state.tasks = data.tasks;
       console.log('[Gist] 数据已写入 state, persons=', state.persons.length);
-      // 从 IndexedDB 恢复头像
-      await loadAvatarsForAllPersons();
+      // Gist 数据加载成功，立即隐藏 localStorage 空数据提示
+      var imp = document.getElementById('importPrompt');
+      if (imp) imp.style.display = 'none';
       render();
       requestAnimationFrame(() => {
         const el = document.getElementById('personCount');
@@ -3717,7 +3791,6 @@ async function loadFromGist() {
         } else {
           console.error('[Gist] personCount 元素未找到！');
         }
-        renderPersonList();
         console.log('[Gist] requestAnimationFrame 强制刷新完成');
       });
       notify('✅ 已从 GitHub Gist 恢复数据', 'success');
@@ -3737,11 +3810,11 @@ async function generateShareLink() {
   notify('⏳ 正在保存到 Gist...', 'success');
   await saveToGist();
   if (!gistId) { notify('❌ 保存失败，无法生成链接', 'error'); return; }
-  // 分享链接：用当前页面地址 + gist 参数
-  const currentUrl = window.location.href.split('?')[0];
-  const shareUrl = currentUrl + '?readonly=1&gist=' + gistId;
+  // 分享链接：固定使用 GitHub Pages 地址
+  const baseUrl = 'https://raing0106.github.io/gantt-chart/培训部工作排定甘特图.html';
+  const shareUrl = baseUrl + '?readonly=1&gist=' + gistId;
   navigator.clipboard.writeText(shareUrl).then(() => {
-    notify('✅ 分享链接已复制！打开后自动读最新数据', 'success');
+    notify('✅ 分享链接已复制！', 'success');
     console.log('[分享链接]', shareUrl);
   }).catch(() => {
     prompt('复制此链接分享：', shareUrl);
