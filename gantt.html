@@ -1808,7 +1808,7 @@ body {
       </div>
       <div class="modal-field">
         <label class="modal-label">GitHub Token <span style="font-weight:400;color:var(--muted);font-size:11px">（备用）</span></label>
-        <input class="modal-input" id="githubTokenInput" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+        <input class="modal-input" id="githubTokenInput" type="password" placeholder="REMOVED_FOR_UPLOAD">
         <div style="font-size:11px;color:var(--muted);margin-top:4px">
           获取方式：GitHub → Settings → Developer settings → Personal access tokens → Generate new token（勾选 <b>gist</b> 权限）
         </div>
@@ -1873,18 +1873,18 @@ function getTaskTemplates() {
     const saved = localStorage.getItem('aoi_gantt_task_types');
     if (saved) {
       const parsed = JSON.parse(saved);
-      // 【强制修复】每次都强制使用正确的颜色，不依赖检测逻辑
-      let fixed = false;
-      Object.keys(parsed).forEach((k, i) => {
-        const expectedColor = COLORS[k];
-        if (expectedColor && parsed[k].color !== expectedColor) {
-          parsed[k].color = expectedColor;
-          fixed = true;
-        }
+      // 【保留用户自定义颜色】不再强制覆盖
+      // 只做结构性修复：确保必要字段存在
+      let needsSave = false;
+      Object.keys(parsed).forEach(k => {
+        if (!parsed[k].name) { parsed[k].name = k; needsSave = true; }
+        if (!parsed[k].days) { parsed[k].days = 3; needsSave = true; }
+        if (!parsed[k].icon) { parsed[k].icon = '✨'; needsSave = true; }
+        if (!parsed[k].type) { parsed[k].type = k; needsSave = true; }
       });
-      if (fixed) {
+      if (needsSave) {
         localStorage.setItem('aoi_gantt_task_types', JSON.stringify(parsed));
-        console.log('[getTaskTemplates] 已强制修复任务类型颜色');
+        console.log('[getTaskTemplates] 已修复任务类型结构');
       }
       return parsed;
     }
@@ -1940,27 +1940,10 @@ let editAvatarBase64 = '';
 // INIT
 // ═══════════════════════════════════════════════════════
 
-// AUTO FIX TASK TYPE COLORS (auto-run on load)
+// 禁用自动修复颜色功能（保留用户自定义颜色）
 function fixTaskTypeColors() {
-  const saved = localStorage.getItem('aoi_gantt_task_types');
-  if (!saved) return;
-  try {
-    const types = JSON.parse(saved);
-    const NICE = ['5c9ead','e8a87c','95c77d','c38d9e','f4a261','e76f51','8b6fc6','4ecdc4','ff6b6b','45b7d1','96ceb4','f7dc6f','bb8fce','85c1e2'];
-    let changed = false;
-    Object.keys(types).forEach((k, i) => {
-      const c = types[k].color || '';
-      if (!c || c.length < 7 || parseInt(c.replace('#',''), 16) > 0xcccccc) {
-        types[k].color = '#' + NICE[i % NICE.length];
-        changed = true;
-        console.log('[fixColor] 修复任务类型:', k, '->', types[k].color);
-      }
-    });
-    if (changed) {
-      localStorage.setItem('aoi_gantt_task_types', JSON.stringify(types));
-      console.log('[fixColor] 任务类型颜色已自动修复');
-    }
-  } catch(e) { console.error('[fixColor] 错误:', e); }
+  // 不再自动修复颜色，用户的自定义颜色会被保留
+  return;
 }
 
 function init() {
@@ -1993,23 +1976,10 @@ function loadState() {
       console.log("loadState: 已加载", state.persons.length, "人", state.tasks.length, "个任务");
     } else {
       console.log("loadState: 无本地数据");
-      // 延迟执行，确保 DOM 已加载
-      setTimeout(showImportPrompt, 500);
     }
   } catch(e) {
     console.error("loadState 错误:", e);
   }
-}
-
-function showImportPrompt() {
-  // 避免重复创建
-  if (document.getElementById('importPrompt')) return;
-  var el = document.createElement('div');
-  el.id = 'importPrompt';
-  el.style.cssText = 'position:fixed;top:70px;right:20px;z-index:999;background:#1a2a4a;color:white;padding:16px 20px;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.2);font-size:13px;cursor:pointer;max-width:260px;';
-  el.innerHTML = '📂 未找到本地数据<br><span style="color:#ffb7c5;font-size:12px">点击此处选择备份 JSON 文件恢复 →</span>';
-  el.onclick = function() { document.getElementById('jsonFileInput').click(); };
-  document.body.appendChild(el);
 }
 
 function saveState() {
@@ -2938,7 +2908,7 @@ function renderGantt() {
       const startCol = (sIdx >= 0 ? sIdx : 0) + 2;
       const endCol   = (eIdx >= 0 ? eIdx : dayCount - 1) + 2; // 包含结束日
       const conflict = checkConflict(task, p.id);
-      const taskColor = TASK_TEMPLATES[task.type]?.color || '#5c9ead';
+      const taskColor = task.categoryColor || TASK_TEMPLATES[task.type]?.color || '#5c9ead';
       const bar = document.createElement('div');
       bar.className = `gantt-bar ${task.type || 'custom'}${conflict?' has-conflict':''}`;
       bar.style.gridColumn = `${startCol} / ${endCol + 1}`;
@@ -3555,8 +3525,8 @@ function stopDrag(event) {
 const GIST_DB_NAME = 'gantt-settings';
 const GIST_DB_VERSION = 2;
 let gistDB = null;
-let githubToken = '';
-let gistId = 'b4bd20351b7d80cda87e2bee75ac23e6';
+let githubToken = 'REMOVED_FOR_UPLOAD';
+let gistId = '28f43e126f970db0040d9a94624fdda0';
 let gistAutoSaveTimer = null;
 
 /* ---------- IndexedDB 存储（file: 协议下 localStorage 不可用） ---------- */
@@ -3752,7 +3722,11 @@ async function saveToGist() {
       public: true,
       files: {
         'gantt-data.json': {
-          content: JSON.stringify({ persons: personsWithAvatar, tasks: state.tasks }, null, 2)
+          content: JSON.stringify({ 
+            persons: personsWithAvatar, 
+            tasks: state.tasks,
+            taskTypes: TASK_TEMPLATES  // 同时保存任务模板（包含自定义颜色）
+          }, null, 2)
         }
       }
     };
@@ -3764,7 +3738,28 @@ async function saveToGist() {
       headers: { 'Authorization': `token ${githubToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    if (!resp.ok) {
+      if (resp.status === 404) {
+        console.log('[Gist] 旧Gist不存在，创建新的...');
+        gistId = null;
+        url = 'https://api.github.com/gists';
+        method = 'POST';
+        const resp2 = await fetch(url, {
+          method: method,
+          headers: { 'Authorization': `token ${githubToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!resp2.ok) throw new Error(`HTTP ${resp2.status}`);
+        const data = await resp2.json();
+        if (data.id) {
+          gistId = data.id;
+          await saveGistSetting('gist-id', gistId);
+          console.log('[Gist] 新Gist创建成功:', gistId);
+        }
+        return true;
+      }
+      throw new Error(`HTTP ${resp.status}`);
+    }
     const data = await resp.json();
     if (!gistId && data.id) {
       gistId = data.id;
@@ -3810,10 +3805,13 @@ async function loadFromGist() {
     if (data.persons && data.tasks !== undefined) {
       state.persons = data.persons;
       state.tasks = data.tasks;
+      // 恢复任务模板（包含自定义颜色）
+      if (data.taskTypes) {
+        TASK_TEMPLATES = { ...TASK_TEMPLATES, ...data.taskTypes };
+        saveTaskTemplates(TASK_TEMPLATES);
+        console.log('[Gist] 已恢复任务模板，包含', Object.keys(TASK_TEMPLATES).length, '种类型');
+      }
       console.log('[Gist] 数据已写入 state, persons=', state.persons.length);
-      // Gist 数据加载成功，立即隐藏 localStorage 空数据提示
-      var imp = document.getElementById('importPrompt');
-      if (imp) imp.style.display = 'none';
       render();
       requestAnimationFrame(() => {
         const el = document.getElementById('personCount');
