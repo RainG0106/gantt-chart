@@ -2908,18 +2908,27 @@ function renderGantt() {
       const startCol = (sIdx >= 0 ? sIdx : 0) + 2;
       const endCol   = (eIdx >= 0 ? eIdx : dayCount - 1) + 2; // 包含结束日
       const conflict = checkConflict(task, p.id);
-      // 分享链接版本：按图标名称强制使用指定颜色
-      const FORCE_TASK_COLORS = {
-        '技术': '#95c77d',    // 浅绿色 - 技术培训
-        '理论': '#e8a87c',    // 橙色 - 理论培训
-        '会议': '#c38d9e',    // 薰衣草色 - 会议
-        '扶持': '#f4d03f',    // 深黄色 - 开业扶持/门店扶持（和橙色区分明显）
-        '实操': '#fff59d',    // 浅黄色 - 门店实操
-        '⭐': '#85c1e2'       // 浅蓝色 - 自定义
+      // 分享链接版本：按任务类型强制使用指定颜色（优先任务类型，再按图标）
+      const FORCE_TYPE_COLORS = {
+        tech: '#95c77d',     // 浅绿色 - 技术培训
+        theory: '#e8a87c',   // 橙色 - 理论培训
+        meeting: '#c38d9e',  // 薰衣草色 - 会议
+        support: '#f4d03f',   // 深黄色 - 开业扶持
+        store: '#fff176',     // 浅黄色 - 门店扶持（比开业扶持更浅）
+        practice: '#fff59d',  // 浅黄色 - 门店实操
       };
-      // 优先用图标名称匹配，其次用任务类型，最后用自定义
-      const iconColor = FORCE_TASK_COLORS[task.icon] || FORCE_TASK_COLORS[task.type] || FORCE_TASK_COLORS['⭐'];
-      const taskColor = iconColor || task.categoryColor || TASK_TEMPLATES[task.type]?.color || '#5c9ead';
+      const FORCE_ICON_COLORS = {
+        '技术': '#95c77d',    // 浅绿色
+        '理论': '#e8a87c',    // 橙色
+        '会议': '#c38d9e',    // 薰衣草色
+        '扶持': '#f4d03f',    // 深黄色
+        '实操': '#fff59d',    // 浅黄色
+        '⭐': '#85c1e2'       // 浅蓝色
+      };
+      // 优先用任务类型颜色，其次用图标颜色
+      const typeColor = FORCE_TYPE_COLORS[task.type];
+      const iconColor = FORCE_ICON_COLORS[task.icon] || FORCE_ICON_COLORS['⭐'];
+      const taskColor = typeColor || iconColor || task.categoryColor || TASK_TEMPLATES[task.type]?.color || '#5c9ead';
       const bar = document.createElement('div');
       bar.className = `gantt-bar ${task.type || 'custom'}${conflict?' has-conflict':''}`;
       bar.style.gridColumn = `${startCol} / ${endCol + 1}`;
