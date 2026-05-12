@@ -2908,7 +2908,19 @@ function renderGantt() {
       const startCol = (sIdx >= 0 ? sIdx : 0) + 2;
       const endCol   = (eIdx >= 0 ? eIdx : dayCount - 1) + 2; // 包含结束日
       const conflict = checkConflict(task, p.id);
-      const taskColor = task.categoryColor || TASK_TEMPLATES[task.type]?.color || '#5c9ead';
+      // 分享链接版本：强制使用指定颜色
+      const FORCE_TASK_COLORS = {
+        tech: '#95c77d',    // 浅绿色 - 技术培训
+        theory: '#e8a87c',  // 橙色 - 理论培训
+        meeting: '#c38d9e', // 薰衣草色 - 会议
+        support: '#d4a574',  // 土黄色 - 开业扶持
+        store: '#fff59d',    // 浅黄色 - 门店扶持
+        practice: '#fff59d', // 浅黄色 - 门店实操（备用）
+        custom: '#85c1e2'    // 浅蓝色 - 自定义任务
+      };
+      // 优先用强制颜色，其次用模板颜色，最后用默认值
+      const forceColor = FORCE_TASK_COLORS[task.type] || FORCE_TASK_COLORS.custom;
+      const taskColor = forceColor || task.categoryColor || TASK_TEMPLATES[task.type]?.color || '#5c9ead';
       const bar = document.createElement('div');
       bar.className = `gantt-bar ${task.type || 'custom'}${conflict?' has-conflict':''}`;
       bar.style.gridColumn = `${startCol} / ${endCol + 1}`;
