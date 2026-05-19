@@ -3203,13 +3203,23 @@ function exportTaskExcel() {
   notify('📥 培训组工作明细已导出：' + tasks.length + ' 条记录', 'success');
 }
 function exportTaskCSV() {
-  const startDate = document.getElementById('exportTaskStart').value;
-  const endDate   = document.getElementById('exportTaskEnd').value;
-  if (!startDate || !endDate) { notify('请先在菜单中选择日期范围（或联系管理员）', 'error'); return; }
-  if (startDate > endDate) { notify('开始日期不能晚于结束日期', 'error'); return; }
+  var startDate, endDate, psDate, peDate;
 
-  const psDate = parseDate(startDate);
-  const peDate = parseDate(endDate);
+  // 只读模式下：无需日期选择，直接导出全部任务
+  if (window.IS_READONLY) {
+    if (state.tasks.length === 0) { notify('当前没有任务数据', 'error'); return; }
+    startDate = state.tasks.reduce(function(min, t) { return t.startDate < min ? t.startDate : min; }, state.tasks[0].startDate);
+    endDate   = state.tasks.reduce(function(max, t) { return t.endDate > max ? t.endDate : max; }, state.tasks[0].endDate);
+    psDate = parseDate(startDate);
+    peDate = parseDate(endDate);
+  } else {
+    startDate = document.getElementById('exportTaskStart').value;
+    endDate   = document.getElementById('exportTaskEnd').value;
+    if (!startDate || !endDate) { notify('请先在菜单中选择日期范围（或联系管理员）', 'error'); return; }
+    if (startDate > endDate) { notify('开始日期不能晚于结束日期', 'error'); return; }
+    psDate = parseDate(startDate);
+    peDate = parseDate(endDate);
+  }
 
   const tasks = state.tasks.filter(t => {
     if (!t.startDate || !t.endDate) return false;
