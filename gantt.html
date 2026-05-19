@@ -4014,7 +4014,7 @@ async function testGistConnection() {
   window.saveState = function() {
     orig();
     if (gistAutoSaveTimer) clearTimeout(gistAutoSaveTimer);
-    if (githubToken) {
+    if (!window.IS_READONLY && githubToken) {
       gistAutoSaveTimer = setTimeout(() => { saveToGist(); }, 3000);
     }
   };
@@ -4026,7 +4026,8 @@ async function testGistConnection() {
   window.init = async function() {
     await loadGistSettings();  // 等 IndexedDB 完全初始化完成
     // 优先从 Gist 加载，成功则直接渲染，不再走 localStorage
-    if (githubToken && gistId) {
+    // 只读模式下由 _loadGistShare() 负责加载，跳过这里避免两个 Gist 同时加载冲突
+    if (!window.IS_READONLY && githubToken && gistId) {
       const ok = await loadFromGist();
       if (ok) { 
         console.log('[patchInit] Gist 加载成功，跳过 _init()');
