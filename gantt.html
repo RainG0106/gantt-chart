@@ -3426,60 +3426,74 @@ function stopDrag(event) {
     var gistParam = p.get("gist");
     if (gistParam) {
       var roMsg = document.getElementById("roBanner");
-      if (roMsg) roMsg.innerHTML = "<span>⏳</span><span>正在从 Gist 加载数据…</span>";
-      console.log('[Gist分享] 开始加载 gistId=', gistParam);
-      fetch('https://api.github.com/gists/' + gistParam)
-        .then(function(r) {
-          console.log('[Gist分享] HTTP status=', r.status);
-          if (!r.ok) throw new Error("HTTP " + r.status);
-          return r.json();
-        })
-        .then(function(gistData) {
-          console.log('[Gist分享] Gist 数据已获取, files=', gistData.files ? Object.keys(gistData.files) : 'none');
-          // Gist 文件格式：{ files: { "gantt-data.json": { content: "..." } } }
-          var file = gistData.files && gistData.files["gantt-data.json"];
-          if (!file || !file.content) {
-            console.error('[Gist分享] 未找到 gantt-data.json 文件, file=', file);
-            throw new Error("Gist 中未找到数据文件");
-          }
-          console.log('[Gist分享] 文件内容长度=', file.content.length);
-          var data = JSON.parse(file.content);
-          console.log('[Gist分享] JSON 解析成功, persons=', data.persons?.length, 'tasks=', data.tasks?.length);
-          console.log('[Gist分享] SUSHI_CAT_AVATAR defined=', typeof SUSHI_CAT_AVATAR !== 'undefined');
-          // 兼容多种数据格式
-          if (data.persons && data.tasks !== undefined) {
-            // 加回默认头像（Gist 里不存 avatar，或存了无效值）
-            state.persons = data.persons.map(p => ({
-              ...p,
-              avatar: (p.avatar && (p.avatar.startsWith('data:') || p.avatar.startsWith('http'))) ? p.avatar : SUSHI_CAT_AVATAR
-            }));
-            state.tasks = data.tasks;
-          } else if (data.record && data.record.persons) {
-            state.persons = data.record.persons.map(p => ({
-              ...p,
-              avatar: (p.avatar && (p.avatar.startsWith('data:') || p.avatar.startsWith('http'))) ? p.avatar : SUSHI_CAT_AVATAR
-            }));
-            state.tasks = data.record.tasks;
-          } else if (data.data) {
-            state.persons = (data.data.persons || []).map(p => ({
-              ...p,
-              avatar: (p.avatar && (p.avatar.startsWith('data:') || p.avatar.startsWith('http'))) ? p.avatar : SUSHI_CAT_AVATAR
-            }));
-            state.tasks = data.data.tasks || [];
-          } else {
-            throw new Error("数据格式异常：无法识别的 JSON 结构");
-          }
-          console.log('[Gist分享] 数据已加载, persons avatar check:', state.persons[0]?.name, 'avatar set:', !!state.persons[0]?.avatar);
-          // 清除 localStorage，防止旧数据覆盖
-          localStorage.removeItem('aoi_gantt_v1');
-          console.log('[Gist分享] 准备渲染');
-          if (typeof render === "function") render();
-          if (roMsg) roMsg.innerHTML = "<span>📋</span><span>只读模式 — 数据已加载（Gist）</span>";
-        })
-        .catch(function(e) {
-          console.error("[Gist分享] 加载失败:", e);
-          if (roMsg) roMsg.innerHTML = "<span>❌</span><span>Gist 加载失败：" + e.message + "</span>";
-        });
+      var _roAutoTimer = null; // 自动刷新定时器
+
+      // 核心：从 Gist 拉取并渲染数据
+      function _loadGistShare(isManual) {
+        if (roMsg) {
+          roMsg.innerHTML = "<span>⏳</span><span>" + (isManual ? "正在手动刷新…" : "正在自动更新数据…") + "</span>";
+        }
+        console.log('[Gist分享] 开始加载 gistId=', gistParam);
+        fetch('https://api.github.com/gists/' + gistParam + '?t=' + Date.now())
+          .then(function(r) {
+            console.log('[Gist分享] HTTP status=', r.status);
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function(gistData) {
+            var file = gistData.files && gistData.files["gantt-data.json"];
+            if (!file || !file.content) throw new Error("Gist 中未找到数据文件");
+            var data = JSON.parse(file.content);
+            // 兼容多种数据格式
+            if (data.persons && data.tasks !== undefined) {
+              state.persons = data.persons.map(function(pp) {
+                return Object.assign({}, pp, {
+                  avatar: (pp.avatar && (pp.avatar.startsWith('data:') || pp.avatar.startsWith('http'))) ? pp.avatar : SUSHI_CAT_AVATAR
+                });
+              });
+              state.tasks = data.tasks;
+            } else if (data.record && data.record.persons) {
+              state.persons = data.record.persons.map(function(pp) {
+                return Object.assign({}, pp, {
+                  avatar: (pp.avatar && (pp.avatar.startsWith('data:') || pp.avatar.startsWith('http'))) ? pp.avatar : SUSHI_CAT_AVATAR
+                });
+              });
+              state.tasks = data.record.tasks;
+            } else if (data.data) {
+              state.persons = (data.data.persons || []).map(function(pp) {
+                return Object.assign({}, pp, {
+                  avatar: (pp.avatar && (pp.avatar.startsWith('data:') || pp.avatar.startsWith('http'))) ? pp.avatar : SUSHI_CAT_AVATAR
+                });
+              });
+              state.tasks = data.data.tasks || [];
+            } else {
+              throw new Error("数据格式异常：无法识别的 JSON 结构");
+            }
+            localStorage.removeItem('aoi_gantt_v1');
+            if (typeof render === "function") render();
+            var now = new Date();
+            var timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+            if (roMsg) {
+              roMsg.innerHTML = '<span>📋</span><span>只读模式 — 上次更新 ' + timeStr + '</span>'
+                + '<button onclick="_loadGistShare(true)" style="margin-left:auto;padding:4px 12px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:4px;cursor:pointer;font-size:12px">🔄 立即刷新</button>'
+                + '<button onclick="exportTaskCSV()" style="margin-left:8px;padding:4px 12px;background:#4caf50;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📋 导出任务明细</button>';
+            }
+          })
+          .catch(function(e) {
+            console.error("[Gist分享] 加载失败:", e);
+            if (roMsg) roMsg.innerHTML = "<span>❌</span><span>Gist 加载失败：" + e.message + "</span>"
+              + '<button onclick="_loadGistShare(true)" style="margin-left:auto;padding:4px 12px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:4px;cursor:pointer;font-size:12px">🔄 重试</button>';
+          });
+      }
+
+      // 暴露到全局，让 Banner 按钮可以调用
+      window._loadGistShare = _loadGistShare;
+
+      // 首次加载
+      _loadGistShare(false);
+
+      // 每 3 分钟自动刷新
+      _roAutoTimer = setInterval(function() { _loadGistShare(false); }, 3 * 60 * 1000);
     }
     var l=p.get("load");
     if(l){
@@ -3758,28 +3772,7 @@ async function saveToGist() {
       headers: { 'Authorization': `token ${githubToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!resp.ok) {
-      if (resp.status === 404) {
-        console.log('[Gist] 旧Gist不存在，创建新的...');
-        gistId = null;
-        url = 'https://api.github.com/gists';
-        method = 'POST';
-        const resp2 = await fetch(url, {
-          method: method,
-          headers: { 'Authorization': `token ${githubToken}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if (!resp2.ok) throw new Error(`HTTP ${resp2.status}`);
-        const data = await resp2.json();
-        if (data.id) {
-          gistId = data.id;
-          await saveGistSetting('gist-id', gistId);
-          console.log('[Gist] 新Gist创建成功:', gistId);
-        }
-        return true;
-      }
-      throw new Error(`HTTP ${resp.status}`);
-    }
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     if (!gistId && data.id) {
       gistId = data.id;
