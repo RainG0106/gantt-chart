@@ -4022,14 +4022,20 @@ async function testGistConnection() {
 
 /* ---------- 修改 init 函数，启动时加载 Gist ---------- */
 (function patchInit() {
+  // 只读模式下，Gist 数据由 _loadGistShare() 加载，原始 init 不应运行
+  if (window.IS_READONLY) {
+    // 用空函数覆盖 window.init，避免 DOMContentLoaded 触发 loadState
+    window.init = function() {};
+    return;
+  }
+
   const _init = init;
   window.init = async function() {
     await loadGistSettings();  // 等 IndexedDB 完全初始化完成
     // 优先从 Gist 加载，成功则直接渲染，不再走 localStorage
-    // 只读模式下由 _loadGistShare() 负责加载，跳过这里避免两个 Gist 同时加载冲突
-    if (!window.IS_READONLY && githubToken && gistId) {
+    if (githubToken && gistId) {
       const ok = await loadFromGist();
-      if (ok) { 
+      if (ok) {
         console.log('[patchInit] Gist 加载成功，跳过 _init()');
         return;  // loadFromGist() 内部已调用 render()
       }
