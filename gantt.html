@@ -3203,13 +3203,14 @@ function exportTaskExcel() {
   notify('📥 培训组工作明细已导出：' + tasks.length + ' 条记录', 'success');
 }
 function exportTaskCSV() {
-  var startDate, endDate, psDate, peDate;
+  var startDate, endDate, psDate, peDate, filterPersonId;
 
-  // 只读模式下：无需日期选择，直接导出全部任务
   if (window.IS_READONLY) {
-    if (state.tasks.length === 0) { notify('当前没有任务数据', 'error'); return; }
-    startDate = state.tasks.reduce(function(min, t) { return t.startDate < min ? t.startDate : min; }, state.tasks[0].startDate);
-    endDate   = state.tasks.reduce(function(max, t) { return t.endDate > max ? t.endDate : max; }, state.tasks[0].endDate);
+    startDate = document.getElementById('roExpStart') ? document.getElementById('roExpStart').value : '';
+    endDate   = document.getElementById('roExpEnd')   ? document.getElementById('roExpEnd').value   : '';
+    filterPersonId = document.getElementById('roExpPerson') ? document.getElementById('roExpPerson').value : '';
+    if (!startDate || !endDate) { notify('请选择日期范围', 'error'); return; }
+    if (startDate > endDate) { notify('开始日期不能晚于结束日期', 'error'); return; }
     psDate = parseDate(startDate);
     peDate = parseDate(endDate);
   } else {
@@ -3223,33 +3224,35 @@ function exportTaskCSV() {
 
   const tasks = state.tasks.filter(t => {
     if (!t.startDate || !t.endDate) return false;
-    const ts = parseDate(t.startDate);
-    const te = parseDate(t.endDate);
-    return !(te < psDate || ts > peDate);
-  }).sort((a, b) => parseDate(a.startDate) - parseDate(b.startDate));
+    var ts = parseDate(t.startDate);
+    var te = parseDate(t.endDate);
+    if (te < psDate || ts > peDate) return false;
+    if (filterPersonId && t.personId !== filterPersonId) return false;
+    return true;
+  }).sort(function(a, b) { return parseDate(a.startDate) - parseDate(b.startDate); });
 
   if (tasks.length === 0) { notify('该时间段内没有任务', 'error'); return; }
 
-  const BOM = '\ufeff';
-  const headers = ['姓名', '职位', '任务名称', '任务类型', '开始日期', '结束日期', '天数', '备注'];
-  const rows = tasks.map(t => {
-    const p = state.persons.find(x => x.id === t.personId) || {};
-    const tpl = TASK_TEMPLATES[t.type] || {};
-    const duration = Math.max(1, daysBetween(t.startDate, t.endDate));
+  var BOM = '\ufeff';
+  var headers = ['姓名', '职位', '任务名称', '任务类型', '开始日期', '结束日期', '天数', '备注'];
+  var rows = tasks.map(function(t) {
+    var p = state.persons.find(function(x){ return x.id === t.personId; }) || {};
+    var tpl = TASK_TEMPLATES[t.type] || {};
+    var duration = Math.max(1, daysBetween(t.startDate, t.endDate));
     return [p.name||'未知', p.position||'', t.name||tpl.name||'自定义', tpl.name||t.type||'自定义', t.startDate, t.endDate, duration+'天', t.note||''];
   });
 
-  const csvString = [headers, ...rows]
-    .map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(','))
-    .join('\n');
-  const blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
+  var csvString = [headers].concat(rows.map(function(r) {
+    return r.map(function(c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(',');
+  })).join('\n');
+  var blob = new Blob([BOM + csvString], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
   a.href = url;
   a.download = '培训任务明细_' + startDate + '_' + endDate + '.csv';
   document.body.appendChild(a);
   a.click();
-  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
   notify('📋 任务明细CSV已导出：' + tasks.length + ' 条', 'success');
 }
 
@@ -3427,13 +3430,13 @@ function stopDrag(event) {
       document.querySelectorAll(".sidebar,.header-actions,.add-form,.person-list-toggle").forEach(function(e){if(e)e.style.display="none"});
       var d=document.createElement("div");
       d.id="roBanner";
-      d.style.cssText="position:fixed;top:0;left:0;right:0;z-index:999;background:#1a2a4a;color:white;padding:10px 20px;font-size:13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap";
+      d.style.cssText="position:fixed;top:0;left:0;right:0;z-index:999;background:#1a2a4a;color:white;padding:10px 20px;font-size:13px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;line-height:1.8";
       d.innerHTML='<span>📋</span><span>只读模式 — 不可编辑</span><button onclick="exportTaskCSV()" style="margin-left:auto;padding:4px 12px;background:#4caf50;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📋 导出任务明细</button>';
       document.body.prepend(d);
       var m=document.querySelector(".main");
-      if(m)m.style.marginTop="50px";
+      if(m)m.style.marginTop="80px";
       var hdr=document.querySelector("header");
-      if(hdr)hdr.style.marginTop="50px";
+      if(hdr)hdr.style.marginTop="80px";
     }
     // 处理 gist= 参数（从 GitHub Gist 加载分享数据）
     var gistParam = p.get("gist");
@@ -3486,10 +3489,31 @@ function stopDrag(event) {
             if (typeof render === "function") render();
             var now = new Date();
             var timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0') + ':' + String(now.getSeconds()).padStart(2,'0');
+            // 自动计算数据日期范围
+            var allDates = state.tasks.map(function(t){ return t.startDate||''; }).filter(Boolean);
+            var minDate = allDates.length ? allDates.reduce(function(a,b){ return a<b?a:b; }) : '';
+            var maxDate = state.tasks.map(function(t){ return t.endDate||''; }).filter(Boolean)
+              .reduce(function(a,b){ return a>b?a:b; }, minDate);
+            // 生成人员选项
+            var personOptions = '<option value="">全部人员</option>';
+            state.persons.forEach(function(p){ personOptions += '<option value="'+p.id+'">'+p.name+'</option>'; });
             if (roMsg) {
-              roMsg.innerHTML = '<span>📋</span><span>只读模式 — 上次更新 ' + timeStr + '</span>'
-                + '<button onclick="_loadGistShare(true)" style="margin-left:auto;padding:4px 12px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:4px;cursor:pointer;font-size:12px">🔄 立即刷新</button>'
-                + '<button onclick="exportTaskCSV()" style="margin-left:8px;padding:4px 12px;background:#4caf50;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📋 导出任务明细</button>';
+              roMsg.innerHTML =
+                '<span>📋</span>' +
+                '<span style="white-space:nowrap">只读模式 — 上次更新 ' + timeStr + '</span>' +
+                // 第一行：筛选控件
+                '<span style="display:flex;align-items:center;gap:6px;flex:1;flex-wrap:wrap"> ' +
+                  '<span style="font-size:11px;opacity:0.8">从</span>' +
+                  '<input type="date" id="roExpStart" value="'+minDate+'" style="font-size:12px;padding:2px 4px;border-radius:4px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.15);color:white;cursor:pointer"> ' +
+                  '<span style="font-size:11px;opacity:0.8">至</span>' +
+                  '<input type="date" id="roExpEnd" value="'+maxDate+'" style="font-size:12px;padding:2px 4px;border-radius:4px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.15);color:white;cursor:pointer"> ' +
+                  '<select id="roExpPerson" style="font-size:12px;padding:2px 4px;border-radius:4px;border:1px solid rgba(255,255,255,0.4);background:rgba(255,255,255,0.15);color:white;cursor:pointer">' + personOptions + '</select>' +
+                '</span>' +
+                // 第二行：按钮
+                '<span style="display:flex;gap:6px;flex-shrink:0"> ' +
+                  '<button onclick="_loadGistShare(true)" style="padding:4px 10px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);border-radius:4px;cursor:pointer;font-size:12px">🔄 刷新</button>' +
+                  '<button onclick="exportTaskCSV()" style="padding:4px 10px;background:#4caf50;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📋 导出CSV</button>' +
+                '</span>';
             }
           })
           .catch(function(e) {
